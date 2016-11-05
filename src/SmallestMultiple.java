@@ -15,7 +15,12 @@ public class SmallestMultiple {
     */
     
     public static void main(String[] args){
+        //Messed around one morning and figured it out:
         
+        //The number has to be a prime factor of all primes between 1 and 20, so I used these then tweaked the numbers
+        //till I happened across it.
+        
+        //answer = (3*5*7*11*13*17*19)*(2*2*2*2*3) = 232792560
     }
     
 }
