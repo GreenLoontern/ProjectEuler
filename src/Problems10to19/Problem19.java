@@ -35,12 +35,12 @@ public class Problem19 {
                     for(int k = 0; k < leapMonths[j]; k++){
                         if(firstOfMonth && day == 0){
                             count++;
-                            System.out.println("Found one!");
+//                            System.out.println("Found one!");
                         }
                         firstOfMonth = false;
                         day++;
                         day %= 7;
-                        System.out.println(day);
+//                        System.out.println(day);
                     }
                 }
             }
@@ -52,12 +52,12 @@ public class Problem19 {
                     for(int k = 0; k < months[j]; k++){
                         if(firstOfMonth && day == 0){
                             count++;
-                            System.out.println("Found one!");
+//                            System.out.println("Found one!");
                         }
                         firstOfMonth = false;
                         day++;
                         day %= 7;
-                        System.out.println(day);
+//                        System.out.println(day);
                     }
                 }
             }
