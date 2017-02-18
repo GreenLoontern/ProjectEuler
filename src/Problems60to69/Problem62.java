@@ -5,9 +5,7 @@
  */
 package Problems60to69;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -17,134 +15,91 @@ import java.util.List;
 public class Problem62 {
 
     /**
-    The cube, 41063625 (3453), can be permuted to produce two other cubes: 56623104 (3843) and 66430125 (4053). In fact, 41063625 is the smallest cube which has exactly three permutations of its digits which are also cube.
-
-    Find the smallest cube for which exactly five permutations of its digits are cube.
+     * @param args the command line arguments
      */
-    
-    public static List<int[]> permutations = new ArrayList<int[]>();
-    static int currentCubes = 0;
-    static int[] digitArr;
-    
-    //create the biginteger to store the number that will create the cube.
-    static BigInteger num = BigInteger.valueOf(340);
-    //create the biginteger to store the cube
-    static BigInteger pow;
-    
     public static void main(String[] args) {
-        // TODO code application logic 
-        final int count = 5;
+        //create an arrayList for each number
+        List<Long> nums = new ArrayList<Long>();
+        //create an arrayList for the largest permutation of each number
+        List<Long> permutation = new ArrayList<Long>();
+        //create an arrayList for the count of permutations that match that number (count goes to lowest of the two);
+        List<Integer> count = new ArrayList<Integer>();
         
-        List<Double> cubes = new ArrayList<Double>();
+        //number that is used for the goal
+        final int goal = 5;
         
-        while(currentCubes != count){
+        //current largest common permutation
+        int largest = 0;
+        
+        //current number that is being cubed
+        long current = 1;
+        
+        while(count.indexOf(goal) == -1){
             
-            //create the array to hold the cubes
-            cubes = new ArrayList<Double>();
+//            System.out.println(current);
             
-            //reset all of the values (get next number, create next cube, set currentCubes to 0, etc)
-            reset();
+            //add the current number to the list
+            nums.add(current);
+            count.add(0);
             
-            cubes.add(num.doubleValue());
+            //find the largest permutation of that number
+            long permuted = sortLargest(current * current * current);
             
-            List<Integer> digits = new ArrayList<Integer>();
+            //store the permutation in the list
+            permutation.add(permuted);
             
-            //add all of the digits to the list
-            while(pow.compareTo(BigInteger.ZERO) == 1){
-                BigInteger LastDigit = pow.mod(BigInteger.TEN);
-                digits.add(LastDigit.intValue());
-                pow = pow.divide(BigInteger.TEN);
-            }
-            //turn the arrayList into an integer array
-            digitArr = new int[digits.size()];
-            for(int k = 0; k < digitArr.length; k++){
-                digitArr[k] = digits.get(k);
-            }
+            //find out whether any previous numbers share the permutation
+            if(permutation.indexOf(permuted) >= 0){
+                int index = permutation.indexOf(permuted);
+                count.set(index, count.get(index) + 1);
+                if(count.get(index) >= largest) largest = count.get(index);
+                
+            }           
             
-            //permute the array
-            Problem62 obj = new Problem62();
-            obj.heapPermutation(digitArr, digitArr.length, digitArr.length);
-            
-            currentCubes = 1;        
-            //go through the list and check to see how many are cubes
-            for(int l = 0; l < permutations.size(); l++){
-                int[] temp = permutations.get(l);
-//                System.out.println(Arrays.toString(temp));
-                long tempNum = 0;
-                for(int m = temp.length - 1; m >= 0; m--){
-                    tempNum *= 10;
-                    tempNum += temp[m];
-                }
-//                System.out.println(tempNum);
-                //check to see if the number is a cube
-                double cubed = Math.cbrt(tempNum);
-                if(cubed % 1 == 0 && cubes.indexOf(cubed) == -1){
-                    
-//                    System.out.println(cubed);
-                    cubes.add(cubed);
-                    currentCubes++;
-                }
-            }
-            
+            current++;
             
         }
+        long smallest = 1 +count.indexOf(largest);
+        System.out.println(largest + " primes share a common permutation, the lowest of which is " + smallest);
+        System.out.println("The value of the smallest cube is " + smallest * smallest * smallest);
         
-        System.out.println(num.pow(3) + cubes.toString());
         
     }
     
-    public static void reset(){
-        currentCubes = 0;
-        
-        permutations.clear();
-        
-        num = num.add(BigInteger.ONE);
-        
-        System.out.println(num.toString());
-    
-        pow = num.pow(3);
-        System.out.println(pow);
-    }
-    
-    void heapPermutation(int a[], int size, int n)
-    {
-        // if size becomes 1 then prints the obtained
-        // permutation
-        if (size == 1)
-            addArr(a);
- 
-        for (int i=0; i<size; i++)
-        {
-            heapPermutation(a, size-1, n);
- 
-            // if size is odd, swap first and last
-            // element
-            if (size % 2 == 1)
-            {
-                int temp = a[0];
-                a[0] = a[size-1];
-                a[size-1] = temp;
-            }
- 
-            // If size is even, swap ith and last
-            // element
-            else
-            {
-                int temp = a[i];
-                a[i] = a[size-1];
-                a[size-1] = temp;
-            }
-        }
-    
-    }
+    private static List<Integer> x = new ArrayList<Integer>();
 
-    private void addArr(int[] a) {
-        int[] temp = new int[a.length];
-        for(int i = 0; i < a.length; i++){
-            temp[i] = a[i];
-            permutations.add(temp);
+    private static long sortLargest(long pow) {
+        
+        //take the long and convert it into an array of digits
+        x.clear();
+//        System.out.println(pow);
+        while(pow > 0){
+            x.add((int)Math.abs(pow % 10));
+            pow /= 10;
         }
+        
+//        System.out.println(x.toString());
+        int[] digits = new int[x.size()];
+        for(int i = 0; i < digits.length; i++){
+            digits[i] = x.get(digits.length - 1 - i);
+        }       
+        
+        //sort the array from largest to smallest
+        MergeSort ms = new MergeSort();
+        int[] sorted = ms.sort(digits);
+        
+        //convert the sorted array back into a long
+        long largest = 0;
+        for(int i = 0; i < sorted.length; i++){
+            largest *= 10;
+            largest += sorted[i];
+        }
+        
+        //return the long
+//        System.out.println(largest);
+        return largest;
     }
+    
     
     
 }
